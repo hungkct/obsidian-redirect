@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mở trong Obsidian</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 4rem auto; padding: 0 1rem; color: #222; }
+  a.btn { display: inline-block; padding: .6rem 1rem; background: #7c3aed; color: #fff; border-radius: .4rem; text-decoration: none; }
+  code { background: #f3f3f3; padding: .1rem .3rem; border-radius: .2rem; }
+  .err { color: #b91c1c; }
+</style>
+</head>
+<body>
+<p id="msg">Đang mở Obsidian…</p>
+<p><a id="go" class="btn" href="#" hidden>Mở trong Obsidian</a></p>
+<script>
+  // Cách dùng:
+  //   ?uid=ABC123                 -> mở ghi chú có property id: ABC123 (cần plugin Advanced URI)
+  //   ?file=ThuMuc/TenGhiChu -> mở theo đường dẫn (không cần plugin)
+  //   &vault=Ten_Vault           -> tùy chọn, mặc định Obsidian_Vault
+  var p = new URLSearchParams(location.search);
+  var vault = p.get("vault") || "Obsidian_Vault";
+  var uid = p.get("uid");
+  var file = p.get("file");
+  var target = null;
+  if (uid) {
+    target = "obsidian://adv-uri?vault=" + encodeURIComponent(vault) + "&uid=" + encodeURIComponent(uid);
+  } else if (file) {
+    target = "obsidian://open?vault=" + encodeURIComponent(vault) + "&file=" + encodeURIComponent(file);
+  }
+  var msg = document.getElementById("msg");
+  var go = document.getElementById("go");
+  if (target) {
+    go.href = target;
+    go.hidden = false;
+    msg.textContent = "Đang mở Obsidian… Nếu không tự mở, bấm nút bên dưới.";
+    location.href = target;
+  } else {
+    msg.className = "err";
+    msg.innerHTML = "Thiếu tham số. Dùng <code>?uid=ABC123</code> hoặc <code>?file=ThuMuc/TenGhiChu</code>.";
+  }
+</script>
+</body>
+</html>
